@@ -45,16 +45,6 @@ const TeamList: React.FC = () => {
     )
 }
 
-const inputContainerStyle : React.CSSProperties = {
-    flexBasis: "75%",
-    height: "2rem",
-    border: "2px solid #ccc",
-    borderRadius: "8px",
-    margin: "5px",
-    width: "30%",
-  
-}
-
 const playerListContainer: React.CSSProperties = {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(14rem, 1fr))',

@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, {  useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { io, Socket } from "socket.io-client";
+import { io } from "socket.io-client";
 import { BACKEND_URL } from "../constants";
 import pallorImage from "../assets/pallor.jpeg";
 import playerSvg from "../assets/account-icon.png";
@@ -15,7 +15,6 @@ import "react-toastify/dist/ReactToastify.css";
 
 
 const PlayerDisplay: React.FC = () => {
-  const navigate = useNavigate();
   const [socket, setSocket] = useState<any>(null);
   const [currentBidPlayer, setCurrentPlayer] = useState<any>({});
   const [currentCall, setCurrentCall] = useState<any>({});

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import PlayerService from "../services/PlayerService";
 import accountLogo from '../assets/account.png';
 import locationLogo from '../assets/location1.png';
@@ -10,19 +9,15 @@ import whatsappLogo from '../assets/whatsapp.png';
 import playerRoleLogo from '../assets/hat.jpeg';
 import ballingLogo from '../assets/ball.jpeg';
 import S3Service from "../services/s3Service";
-
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import 'react-image-crop/dist/ReactCrop.css'
-import ReactCrop, { type Crop } from 'react-image-crop'
-
 import Loader from "react-js-loader";
 import { ToastContainer, toast } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 
 
 const PlayerRegistration: React.FC = () => {
-  const navigate = useNavigate();
   const [selectedImage, setSelectedImage] = useState<File|null>(null);
   const [isLoading, setIsLoading] = useState(false);
 

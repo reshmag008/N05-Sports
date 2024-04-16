@@ -1,8 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, {  useEffect, useState } from "react";
 import PlayerService from "../services/PlayerService";
-import { io, Socket } from "socket.io-client";
-import { BACKEND_URL, TOTAL_PLAYER } from "../constants";
+import {  TOTAL_PLAYER } from "../constants";
 import pallorImage from "../assets/pallor.jpeg";
 import playerSvg from '../assets/account-icon.png'
 import battingSvg from '../assets/batter.png'
@@ -18,7 +16,6 @@ import "react-toastify/dist/ReactToastify.css";
 
 const AuctionCenter: React.FC = () => {
   
-  const navigate = useNavigate();
   const baseAmount = 500;
   const [allTeams, setAllTeams] = useState<any>([]);
   const [bidFlow, setBidFlow] = useState<any>([]);
@@ -27,7 +24,6 @@ const AuctionCenter: React.FC = () => {
   const [players, setPlayers] = useState<any>([]);
   const [currentBidPlayer, setCurrentBidPlayer] = useState<any>({});
   const [searchText, setSearchText] = useState<string>("");
-  const [socket, setSocket] = useState<Socket | null>(null);
   const [openPopUp, setOpenPopUp] = useState(false);
   const [popUpContent, setPopUpContent] = useState<any>({})
   const [isLoading, setIsLoading] = useState(false);

@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import AppRouter from './AppRouter';
-import Header from './components/Header';
-import Footer from './components/Footer';
 
-import { Provider } from 'react-redux'
 
 
 function App() {
 
   const [isMobileView, setIsMobileView] = useState(false);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   useEffect(() => {
     const checkIfMobile = () => {
@@ -25,12 +21,9 @@ function App() {
 
   
   return (
-    // <div className="App">
       <div style={isMobileView? {} : divStyle} >
         <AppRouter/>
       </div>
-      
-    // </div>
   );
 }
 
