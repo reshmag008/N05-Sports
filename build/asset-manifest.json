@@ -1,0 +1,29 @@
+{
+  "files": {
+    "main.css": "/static/css/main.b4a197a0.css",
+    "main.js": "/static/js/main.2ed77897.js",
+    "static/js/213.cfc7a729.chunk.js": "/static/js/213.cfc7a729.chunk.js",
+    "static/js/732.b41062b5.chunk.js": "/static/js/732.b41062b5.chunk.js",
+    "static/js/453.fa8974a8.chunk.js": "/static/js/453.fa8974a8.chunk.js",
+    "static/media/ppl.png": "/static/media/ppl.fbb7b4649348e6b7a890.png",
+    "static/media/clap.gif": "/static/media/clap.5fa0a1b2909ccfc8e2b9.gif",
+    "static/media/ppl-poster.jpeg": "/static/media/ppl-poster.c9236b9984d62d29406a.jpeg",
+    "static/media/bell.gif": "/static/media/bell.70608f92f7f259b0d050.gif",
+    "static/media/ppl-icon.jpeg": "/static/media/ppl-icon.ae053daf72fc379853b5.jpeg",
+    "static/media/pallor.jpeg": "/static/media/pallor.1e0b347374272c421462.jpeg",
+    "static/media/tennisBall.jpg": "/static/media/tennisBall.8a37e286171e5ee4e673.jpg",
+    "static/media/n05-icon.jpeg": "/static/media/n05-icon.c1d9be7e32ef630db734.jpeg",
+    "static/media/account-icon.png": "/static/media/account-icon.98945f4aded53b891dbc.png",
+    "static/media/congratulations.gif": "/static/media/congratulations.c08791277ad009757115.gif",
+    "index.html": "/index.html",
+    "main.b4a197a0.css.map": "/static/css/main.b4a197a0.css.map",
+    "main.2ed77897.js.map": "/static/js/main.2ed77897.js.map",
+    "213.cfc7a729.chunk.js.map": "/static/js/213.cfc7a729.chunk.js.map",
+    "732.b41062b5.chunk.js.map": "/static/js/732.b41062b5.chunk.js.map",
+    "453.fa8974a8.chunk.js.map": "/static/js/453.fa8974a8.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.b4a197a0.css",
+    "static/js/main.2ed77897.js"
+  ]
+}
