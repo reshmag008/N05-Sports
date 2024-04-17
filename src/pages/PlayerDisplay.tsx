@@ -1,7 +1,7 @@
 import React, {  useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
-import { BACKEND_URL } from "../constants";
+import { BACKEND_URL, TOTAL_PLAYER } from "../constants";
 import pallorImage from "../assets/pallor.jpeg";
 import playerSvg from "../assets/account-icon.png";
 import battingSvg from "../assets/batter.png";
@@ -24,6 +24,9 @@ const PlayerDisplay: React.FC = () => {
   const [allSoldPlayers, setAllSoldPlayer] = useState<any>([])
   const [popUpContent, setPopUpContent] = useState<any>({})
   const [openPopUp, setOpenPopUp] = useState(false);
+  const [allTeams, setAllTeams] = useState<any>([])
+
+  const isMobile = window.matchMedia("(max-width: 600px)").matches;
 
 
 
@@ -31,6 +34,7 @@ const PlayerDisplay: React.FC = () => {
     const newSocket = io(BACKEND_URL);
     setSocket(newSocket);
     getSoldPlayers();
+    GetAllTeams();
     return () => {
       newSocket.disconnect();
     };
@@ -53,6 +57,7 @@ const PlayerDisplay: React.FC = () => {
         setCurrentCall({})
         toast.success(`${player.player_name} sold to ${player.team_name} for ${player.bid_amount}`)
         getSoldPlayers();
+        GetAllTeams();
       });
       
       socket.on("team_complete", (message: any) => {
@@ -63,6 +68,19 @@ const PlayerDisplay: React.FC = () => {
       
     }
   }, [socket]);
+
+  const GetAllTeams = () => {
+    try {
+      PlayerService()
+        .getAllTeams()
+        .then((response: any) => {
+          setAllTeams(response?.data);
+        });
+    } catch (error) {
+      console.error("Error fetching players:", error);
+    }
+  };
+
 
 
   const getSoldPlayers = () =>{
@@ -134,15 +152,53 @@ const PlayerDisplay: React.FC = () => {
             <img src={no5} alt="logo" style={{width: "8rem",height: "4rem",borderRadius: "50px"}} />
         </div>
         
-        
+       
         <div style={soldPlayersStyle}>
 
-        <div >
+        {!isMobile && 
+          <div>
+            {allTeams && allTeams.length>0 &&
+              <div style={allTeamStyle}>
+                  
+                  { allTeams.map((element:any, index:number) => (
+                      <div key={index} style={{display:'flex', padding:'10px'}} >
+                          {/* <div > */}
+                              <img
+                                  src={element.team_logo}
+                                  alt="logo"
+                                  style={profileImageStyle1}
+                              />
+                              <div style={{color:'purple'}}>
+                                  <div >
+                                      <span style={fullNameText}>{element.team_name.toUpperCase()}</span>
+                                  </div>
+                                  <div >
+                                      <span style={fullNameText}>Total Points : {element.total_points}</span>
+                                  </div>
+                                  <div >
+                                      <span style={fullNameText}>Max Bid Amount : {element.max_bid_amount}</span>
+                                  </div>
+                                  <div >
+                                      <span style={fullNameText}>Player Count : {element.player_count}/{TOTAL_PLAYER}</span>
+                                  </div>
+                              </div>
+
+                          {/* </div> */}
+
+                      </div>
+                  ))}
+              </div>
+          }
+          </div>
+          }
+
+            <div >
                 { currentCall && Object.keys(currentCall).length>0 && (
                     <div style={teamCallStyle}>
                         <div style={{border: "1px solid purple",
                                 boxShadow: "0 2px 4px rgba(0, 0, 0, 1.1)",
-                                borderRadius: "8px",color:'green',paddingLeft:'10px', paddingRight:'10px',display:'flex',height:'100px'}}>
+                                borderRadius: "8px",color:'green',paddingLeft:'10px', paddingRight:'10px',display:'flex',height:'100px',
+                                marginLeft:'100px'}}>
                             
                             <img
                                 src={bellGif}
@@ -381,15 +437,15 @@ const profileImageStyle: React.CSSProperties = {
 };
 
 const profileImageStyle1: React.CSSProperties = {
-    height: "4rem",
-    width: "4rem",
+    height: "5rem",
+    width: "5rem",
     padding: "5px",
     alignItems: "flex-start",
     display: "grid",
     // marginTop: "-10px",
     objectFit: "cover",
     boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-    borderRadius: "50px",
+    // borderRadius: "50px",
     marginTop: "7px",
     filter: "grayscale(50%)",
     //   border: "5px solid transparent",
@@ -397,14 +453,14 @@ const profileImageStyle1: React.CSSProperties = {
 
 
 const players__card__wrap: React.CSSProperties = {
-  width: "57%",
+  // width: "57%",
   gap: "2rem",
   backgroundImage: "linear-gradient(to top,  #000033 , #800080)",
   border: "1px solid #ccc",
   boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
   borderRadius: "8px",
 //   margin: "0/ auto",
-  marginLeft: "235px",
+  marginLeft: "140px",
 };
 
 const cardHeader: React.CSSProperties = {
@@ -430,7 +486,7 @@ const displayMargin : React.CSSProperties = {
 
 const soldPlayersStyle : React.CSSProperties = {
   display:'grid',
-  gridTemplateColumns: '70% 30%',
+  gridTemplateColumns: '20% 50% 30%',
   gap: '2rem'
 }
 
@@ -447,6 +503,13 @@ const soldPlayerListStyle : React.CSSProperties = {
  boxShadow: "0 2px 4px rgba(0, 0, 0, 1.1)",
   borderRadius: "8px",
   width:'92%'
+}
+
+const allTeamStyle :  React.CSSProperties = {
+  border: "1px solid purple",
+ boxShadow: "0 2px 4px rgba(0, 0, 0, 1.1)",
+  borderRadius: "8px",
+  width:'150%'
 }
 
 const popUpStyle: React.CSSProperties = {
