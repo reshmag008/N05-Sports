@@ -5,9 +5,12 @@ import logo from "../assets/ppl.png";
 import { usePDF } from 'react-to-pdf';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import Loader from "react-js-loader";
+
 
 
 const PlayerList: React.FC = () => {
+    const [isLoading, setIsLoading] = useState(false)
     const [players, setPlayers] = useState<any>([]);
     const [soldCount, setSoldCount] = useState(0);
     const [unSoldCount, setUnSoldCount] = useState(0);
@@ -34,8 +37,10 @@ const PlayerList: React.FC = () => {
     },[])
    
     const GetAllPlayers = () => {
+        setIsLoading(true);
         try {
             PlayerService().getAllPlayers().then((response:any)=>{
+                setIsLoading(false);
                 setPlayers(response?.data?.players);
                 setSoldCount(response?.data?.soldPlayerCount);
                 setUnSoldCount(response?.data?.unSoldPlayerCount);
@@ -43,6 +48,7 @@ const PlayerList: React.FC = () => {
                 console.log("player== ", players)
             })
         } catch (error) {
+            setIsLoading(false);
             console.error('Error fetching players:', error);
         }
     };
@@ -51,8 +57,12 @@ const PlayerList: React.FC = () => {
         <>
         <Header/>
         <div style={playerCountStyle}>
-            Total Players : {players.length} | Unsold : {unSoldCount} | Sold : {soldCount} | Pending : {pendingCount} 
-            <button style={{marginLeft:'20px'}} onClick={() => toPDF()}>Download PDF</button>
+
+        {isLoading && <Loader type="spinner-cub" bgColor={'green'} color={'green'} title={"Loading Players..."} size={50} /> }
+
+
+            {/* Total Players : {players.length} | Unsold : {unSoldCount} | Sold : {soldCount} | Pending : {pendingCount} 
+            <button style={{marginLeft:'20px'}} onClick={() => toPDF()}>Download PDF</button> */}
              {/* <button onClick={() => generatePDF(getTargetElement, options)}>Generate PDF</button> */}
             </div>
         

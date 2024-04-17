@@ -460,6 +460,7 @@ const PlayerRegistration: React.FC = () => {
                     onChange={handleChange}
                 >
                     <option value="">--Select Batting Style--</option>
+                    <option value="Nil">Nil</option>
                     <option value="Right Hand">Right Hand</option>
                     <option value="Left Hand">Left Hand</option>
                 </select>

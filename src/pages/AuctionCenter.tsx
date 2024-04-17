@@ -1,4 +1,4 @@
-import React, {  useEffect, useState } from "react";
+import React, {  ChangeEvent, useEffect, useState } from "react";
 import PlayerService from "../services/PlayerService";
 import {  TOTAL_PLAYER } from "../constants";
 import pallorImage from "../assets/pallor.jpeg";
@@ -7,8 +7,7 @@ import battingSvg from '../assets/batter.png'
 import ballingSvg from '../assets/tennisBall.jpg'
 import logo from "../assets/ppl.png";
 import 'reactjs-popup/dist/index.css';
-import congratsJif from '../assets/congratulations.gif';
-import clapJif from '../assets/clap.gif'
+
 import no5 from '../assets/n05-icon.jpeg'
 import Loader from "react-js-loader";
 import { ToastContainer, toast } from 'react-toastify';
@@ -24,8 +23,6 @@ const AuctionCenter: React.FC = () => {
   const [players, setPlayers] = useState<any>([]);
   const [currentBidPlayer, setCurrentBidPlayer] = useState<any>({});
   const [searchText, setSearchText] = useState<string>("");
-  const [openPopUp, setOpenPopUp] = useState(false);
-  const [popUpContent, setPopUpContent] = useState<any>({})
   const [isLoading, setIsLoading] = useState(false);
 
 
@@ -49,6 +46,10 @@ const AuctionCenter: React.FC = () => {
       .GetNonBidPlayers(searchText)
       .then((response: any) => {
         let players = response?.data;
+        setSearchText('')
+        if(players.length === 0){
+          toast.success("No pending players");
+        }
         if(players.length === 1){
           setCurrentBidPlayer(players[0]);
           setIsLoading(false);
@@ -190,14 +191,33 @@ const AuctionCenter: React.FC = () => {
           setBidAmount(0);
           setCurrentBidTeam({})
           if(response.data && response.data.player_count === TOTAL_PLAYER){
-              setOpenPopUp(true);
-              setPopUpContent(response.data)
+              InvokeTeamComplete(response.data)
           }
       })
     }else{
+      setIsLoading(false);
       toast.warning("Please select a team and amount.");
     }
    
+  }
+
+  const InvokeTeamComplete = (teamData:any) => {
+    PlayerService().teamComplete(teamData)
+  }
+
+  const handleBidChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setBidAmount(event.target.value ? parseInt(event.target.value) : 0);
+  }
+
+  const getUnsoldPlayers = () =>{
+    PlayerService().getUnsoldPlayers().then((response:any)=>{
+      console.log("response== ",response);
+      if(response && response.data && response.data.length && response.data[0] > 0){
+        GetPlayer();
+      }else{
+        toast.success("Unsold players not found");
+      }
+    })
   }
 
 
@@ -215,38 +235,7 @@ const AuctionCenter: React.FC = () => {
             draggable
             pauseOnHover
             theme="dark" />
-        {openPopUp && 
-        <div style={overlay}>
-            <div style={popUpStyle} >
-                <div style={{textAlign:'right',marginTop:'-25px', marginRight:'-30px'}}>
-                    <button style={closeButtonStyle} onClick={()=>setOpenPopUp(!openPopUp) }>X</button>
-                </div>
-
-                <div>
-                    <img src={congratsJif} alt="logo" style={jifStyle} />
-                </div>
-
-                <div style={{display:'flex',justifyContent:'center'}}>
-                    <img src={popUpContent.team_logo} alt="logo" style={{width: "6rem",
-                        height: "6rem",
-                        borderRadius: "8px",}} />
-                    <span style={{ padding: "10px", 
-                        fontWeight:'bold',
-                        fontSize:'38px',
-                        fontFamily: 'Georgia, serif' 
-                    }}>{popUpContent.team_name}</span>
-                    
-                </div>
-                <div style={{display:'flex',justifyContent:'center'}}>
-                  <span>Completed Auction</span>
-                </div>
-                <div style={{display:'flex',justifyContent:'center'}}>
-                  <img src={clapJif} alt="logo" style={{  height: "8rem",width: "8rem",padding: "10px",}} />
-                </div>
-
-            </div>
-            </div>
-        }
+        
 
       <div style={players__card__wrap1}>
         <span style={{
@@ -380,6 +369,7 @@ const AuctionCenter: React.FC = () => {
         <button style={searchuttonStyle} onClick={sellPlayer} >Sell</button>
         <button style={unSoldButtonStyle} onClick={setUnsoldPlayer} >Un Sold</button>
         <button style={bidBackButtonStyle} onClick={handleBidBack}>Back</button>
+        <button style={searchuttonStyle} onClick={getUnsoldPlayers} >Get Unsold Players</button>
       </div>
 
       <div style={teamListContainer}>
@@ -397,7 +387,7 @@ const AuctionCenter: React.FC = () => {
                     <h4 style={{ padding: "10px" }}>{team.team_name}</h4>
                     </div>
                     {currentBidTeam && currentBidTeam.id === team.id && (
-                    <input type="text" value={bidAmount} style={inputStyle} />
+                    <input type="text" value={bidAmount} style={inputStyle} onChange={handleBidChange}/>
                     )}
                     <hr/>
                     Max Bid Amount : {team.max_bid_amount}
@@ -648,45 +638,7 @@ const bidBackButtonStyle : React.CSSProperties = {
 }
 
 
-const popUpStyle: React.CSSProperties = {
-    position: 'fixed',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    backgroundColor: 'white',
-    padding: '20px',
-    borderRadius: '10px',
-    boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)',
-  };
 
-const closeButtonStyle :  React.CSSProperties = {
-    backgroundColor: 'red' ,
-    color: 'white',
-    padding: '5px 15px',
-    borderRadius: '60%',
-    outline: '0',
-    border: '0',
-    textTransform: 'uppercase',
-    cursor: 'pointer'
-}
-
-
-const overlay : React.CSSProperties={
-    position: 'fixed',
-  top: '0',
-  left: "0",
-  width: "100%",
-  height:" 100%",
-  backgroundColor: 'rgba(18, 15, 17, 0.85)', /* Semi-transparent black */
-  zIndex: '1000'
-}
-
-const jifStyle : React.CSSProperties = {
-  height: "8rem",
-  width: "20rem",
-  padding: "10px",
-
-}
 
 export default AuctionCenter;
 

@@ -12,6 +12,8 @@ import PlayerService from "../services/PlayerService";
 import bellGif from '../assets/bell.gif';
 import { ToastContainer, toast } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
+import congratsJif from '../assets/congratulations.gif';
+import clapJif from '../assets/clap.gif'
 
 
 const PlayerDisplay: React.FC = () => {
@@ -20,6 +22,10 @@ const PlayerDisplay: React.FC = () => {
   const [currentCall, setCurrentCall] = useState<any>({});
   const [soldPlayer, setSoldPlayer] = useState<any>({});
   const [allSoldPlayers, setAllSoldPlayer] = useState<any>([])
+  const [popUpContent, setPopUpContent] = useState<any>({})
+  const [openPopUp, setOpenPopUp] = useState(false);
+
+
 
   useEffect(() => {
     const newSocket = io(BACKEND_URL);
@@ -49,6 +55,11 @@ const PlayerDisplay: React.FC = () => {
         getSoldPlayers();
       });
       
+      socket.on("team_complete", (message: any) => {
+        setOpenPopUp(true);
+        setPopUpContent(JSON.parse(message));
+      })
+      
       
     }
   }, [socket]);
@@ -76,6 +87,40 @@ const PlayerDisplay: React.FC = () => {
             draggable
             pauseOnHover
             theme="dark" />
+
+{openPopUp && 
+        <div style={overlay}>
+            <div style={popUpStyle} >
+                <div style={{textAlign:'right',marginTop:'-25px', marginRight:'-30px'}}>
+                    <button style={closeButtonStyle} onClick={()=>setOpenPopUp(!openPopUp) }>X</button>
+                </div>
+
+                <div>
+                    <img src={congratsJif} alt="logo" style={jifStyle} />
+                </div>
+
+                <div style={{display:'flex',justifyContent:'center'}}>
+                    <img src={popUpContent.team_logo} alt="logo" style={{width: "6rem",
+                        height: "6rem",
+                        borderRadius: "8px",}} />
+                    <span style={{ padding: "10px", 
+                        fontWeight:'bold',
+                        fontSize:'38px',
+                        fontFamily: 'Georgia, serif' 
+                    }}>{popUpContent.team_name}</span>
+                    
+                </div>
+                <div style={{display:'flex',justifyContent:'center'}}>
+                  <span>Completed Auction</span>
+                </div>
+                <div style={{display:'flex',justifyContent:'center'}}>
+                  <img src={clapJif} alt="logo" style={{  height: "8rem",width: "8rem",padding: "10px",}} />
+                </div>
+
+            </div>
+            </div>
+        }
+
 
         
         <div style={{display:'flex', justifyContent:'flex-end', padding:'10px'}}>
@@ -402,6 +447,46 @@ const soldPlayerListStyle : React.CSSProperties = {
  boxShadow: "0 2px 4px rgba(0, 0, 0, 1.1)",
   borderRadius: "8px",
   width:'92%'
+}
+
+const popUpStyle: React.CSSProperties = {
+  position: 'fixed',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  backgroundColor: 'white',
+  padding: '20px',
+  borderRadius: '10px',
+  boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)',
+};
+
+const closeButtonStyle :  React.CSSProperties = {
+  backgroundColor: 'red' ,
+  color: 'white',
+  padding: '5px 15px',
+  borderRadius: '60%',
+  outline: '0',
+  border: '0',
+  textTransform: 'uppercase',
+  cursor: 'pointer'
+}
+
+
+const overlay : React.CSSProperties={
+  position: 'fixed',
+top: '0',
+left: "0",
+width: "100%",
+height:" 100%",
+backgroundColor: 'rgba(18, 15, 17, 0.85)', /* Semi-transparent black */
+zIndex: '1000'
+}
+
+const jifStyle : React.CSSProperties = {
+height: "8rem",
+width: "20rem",
+padding: "10px",
+
 }
 
 const isMobile = window.matchMedia("(max-width: 600px)").matches;

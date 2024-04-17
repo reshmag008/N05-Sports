@@ -44,6 +44,14 @@ export const PlayerService = () => ({
 
     getSoldPlayers : () =>{
         return(axios.get(BACKEND_URL + "/sold_players"))
+    },
+
+    teamComplete : (teamData :any)=>{
+        return(axios.post(BACKEND_URL + "/team_complete", teamData))
+    },
+
+    getUnsoldPlayers : () =>{
+        return(axios.get(BACKEND_URL + "/update_unsold"))
     }
 
 
